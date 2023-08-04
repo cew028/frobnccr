@@ -1,0 +1,483 @@
+\documentclass{amsart}
+%\usepackage[margin=1in]{geometry}
+\usepackage{amsfonts,amsmath,amsthm,amssymb,wasysym}
+\usepackage{enumitem}
+\usepackage{tikz,tikz-cd}
+\usepackage[colorlinks=false,pagebackref,hyperindex]{hyperref}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+%\usepackage{showframe}
+\usepackage[capitalise]{cleveref}
+\Crefname{subsection}{Subsection}{Subsections}
+
+\let\tilde\widetilde
+
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem*{mainconj}{Conjecture}
+\newtheorem*{mainthm}{Theorem}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{conj}[thm]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{dfn}[thm]{Definition}
+\newtheorem{rmk}[thm]{Remark}
+\newtheorem{xmp}[thm]{Example}
+\newtheorem{ntn}[thm]{Notation}
+
+
+\def\onto{\twoheadrightarrow}
+\def\xra{\xrightarrow}
+\def\ux{\underline{x}}
+\def\Arg{\rule{1ex}{1pt}}
+\def\fm{\mathfrak{m}}
+\def\fp{\mathfrak{p}}
+\def\fq{\mathfrak{q}}
+
+\newcommand{\NN}{\mathbf N}
+\newcommand{\ZZ}{\mathbf Z}
+
+\DeclareMathOperator{\Spec}{\operatorname{Spec}}
+\DeclareMathOperator{\gldim}{\operatorname{gl.dim}}
+\DeclareMathOperator{\projdim}{\operatorname{proj.dim}}
+\DeclareMathOperator{\End}{\operatorname{End}}
+\DeclareMathOperator{\Hom}{\operatorname{Hom}}
+\DeclareMathOperator{\Ann}{\operatorname{Ann}}
+\DeclareMathOperator{\rank}{\operatorname{rank}}
+\DeclareMathOperator{\Ext}{\operatorname{Ext}}
+\DeclareMathOperator{\coker}{\operatorname{coker}}
+\DeclareMathOperator{\Tr}{\operatorname{Tr}}
+\DeclareMathOperator{\depth}{\operatorname{depth}}
+\DeclareMathOperator{\id}{\operatorname{id}}
+\DeclareMathOperator*{\colim}{\operatorname{colim}}
+\DeclareMathOperator{\h}{\operatorname{ht}}
+\DeclareMathOperator{\Cl}{\operatorname{C\ell}}
+\DeclareMathOperator{\ev}{\operatorname{ev}}
+
+\DeclareMathOperator{\Mod}{\mathsf{Mod}}
+\DeclareMathOperator{\add}{\mathsf{add}}
+\DeclareMathOperator{\proj}{\mathsf{proj}}
+\DeclareMathOperator{\dual}{\mathsf{dual}}
+
+\newcommand{\Fe}{F_{*}^{e}}
+\newcommand{\Rpe}{R^{1/p^{e}}}
+
+%\newcommand{\sbt}{\,\begin{picture}(-1,1)(-1,-2)\circle*{2}\end{picture}\ }
+
+\newcommand{\todo}[1]{{\color{teal} \sf $\spadesuit\spadesuit\spadesuit$ TODO: [#1]}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Noncommutative resolutions of singularities in positive characteristic}
+
+\author{C. Eric Overton-Walker}
+\address{Department of Mathematical Sciences
+University of Arkansas, 
+Fayetteville, AR 72701}
+\email{cew028@uark.edu}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{abstract}
+\todo{Abstract}
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+Let $k$ be a field and $R$ be a commutative ring. For a $k$-scheme $X=\Spec R$ which may be singular, a \emph{resolution of singularities} of $X$ is a proper birational morphism $\pi\colon Y\to X$ where $Y$ is nonsingular; in other words, $\pi$ is an isomorphism onto a dense open set away from the singular locus of $X$. In the local setting, a commutative noetherian local ring $S$ is regular (and hence if $\mathcal{O}_{Y,y_{0}}=S$, then $Y$ is nonsingular at $y_{0}$) if and only if $\gldim(S)<\infty$ --- that is, the global dimension of $S$,
+\begin{align*}
+\gldim(S)&:=\sup_{N}\left\{\projdim(N)\mid N\in\Mod_{S}\right\},
+\end{align*}
+is finite \cite[Thm.\ ~4.4.16]{Wei94}. Recall the projective dimension of $N$, $\projdim(N)$, is the length of a shortest length projective resolution of $N$. Furthermore, a resolution $\pi\colon Y\to X$ is called \emph{crepant} (a pun on ``no discrepancies") if, for the canonical sheaves $\omega_{X}$ and $\omega_{Y}$, one has that the pullback along $\pi$ preserves the canonical sheaf \cite[(0.2)]{Rei83}.
+
+\bigbreak
+
+Following the survey \cite[\S K]{Leu12}, it is natural to extend the concept of regularity to rings which are noncommutative via the finite global dimension condition. In particular, for a (commutative) ring $R$, one defines a \emph{noncommutative resolution} of $R$ to be a choice of a finitely generated $R$-module $M$ which defines an endomorphism ring $\Lambda=\End_{R}(M)$ so that $M$ is faithful and $\gldim(\Lambda)<\infty$. We further say that $\Lambda$ is a \emph{crepant} resolution if $M$ is reflexive and $\Lambda$ is \emph{homologically homogeneous}, meaning that every simple $\Lambda$-module $S_{i}$ satisfies $\projdim(S_{i})=\dim(R)$, where $\dim(R)$ is the Krull dimension of $R$. In the case that $R$ is Gorenstein, this is equivalent to $\Lambda$ being a maximal Cohen-Macaulay $R$-module, meaning its depth as an $R$-module is equal to $\dim(R)$.
+
+\bigbreak
+
+Motivated by the question posed in \cite{FMS19}, we explore the conditions upon which $M=\Fe R$ defines a noncommutative (crepant) resolution of singularities of a local ring $(R,\fm,k)$ of positive characteristic for large enough $e$. Explicitly, let $R$ be a ring of characteristic $p>0$. The ring $R$ carries a natural ring endomorphism $F$ defined by $F(r)=r^{p}$, called the \emph{Frobenius}. The \emph{Frobenius pushforward} of $R$, or more generally of any $R$-module $M$, is an $R$-module $F_{*}M=\{F_{*}m\mid m\in M\}$ with the addition of $M$ and scalar multiplication given by $rF_{*}m=F_{*}(r^{p}m)$. As $F$ is an endomorphism, one can naturally define the \emph{$e$th iterate} of this construction, $\Fe M$, for any $e\in\NN$; scalar multiplication is of course $r\Fe m=\Fe(r^{p^{e}}m)$. In some places, $\Fe M$ is written $^{e}M$, but we will not do this. 
+
+\bigbreak
+
+The Frobenius allows us to define characteristic $p$ singularity types on $R$, called $F$-singularities. We say that $R$ is \emph{(strongly) $F$-regular} if for every $c\in R^{\circ}$, where $R^{\circ}$ is the complement of the minimal primes, there exists $e\gg0$ such that the map $R\to\Fe R$ defined by $1\mapsto\Fe c$ splits. Strongly $F$-regular rings are a particularly ``mild" class of $F$-singularities, in that they are in some sense ``close" to regular rings, and that the strongly $F$-regular condition implies many other kinds of $F$-singularities which may be more poorly behaved.
+
+\bigbreak
+
+Finally, we say that $R$ \emph{has finite $F$-representation type} (or \emph{has FFRT}, or sometimes, perhaps ungrammatically, \emph{is FFRT}) via $M_{1},\ldots,M_{s}$ if for all $e\in\NN$, $\Fe R$ is isomorphic to a direct sum of finitely many distinct finitely generated $R$-modules $M_{1},\ldots,M_{s}$ \cite[Dfn.\ 3.1.1]{SVdB97}. Explicitly, for all $e\in\NN$ and $i\in\{1,\ldots,s\}$, there exist $n(e,i)\in\NN\cup\{0\}$ such that
+\begin{align*}
+\Fe R\cong\bigoplus_{i=1}^{s}M_{i}^{n(e,i)}.
+\end{align*} 
+The indecomposable summands $M_{1},\ldots,M_{s}$ are independent of $e$, though of course for any fixed values $e_{0}$ and $i_{0}$, one may have $n(e_{0},i_{0})=0$ --- that is, $M_{i_{0}}$ need not appear in the decomposition of $F_{*}^{e_{0}}R$. 
+
+\bigbreak 
+
+Rings which are FFRT are automatically \emph{$F$-finite}, which means that $F_{*}R$ (or equivalently $\Fe R$ for all $e\in\NN$) is a finitely generated $R$-module.
+
+\bigbreak
+
+In \cite{FMS19}, the following conjecture is proposed.
+
+\begin{conj}[Faber-Muller-Smith]\label{conj:FMS}
+If $R$ is strongly $F$-regular and has FFRT, then the ring $\Lambda=\End_{R}(\Fe R)$ has finite global dimension for $e\gg0$.
+\end{conj}
+
+\noindent This conjecture is addressed in \cref{sec:sFreg_FFRT}. In the first subsection, we demonstrate that $\Lambda=\End_{R}(\Fe R)$ is a noncommutative resolution. In the second subsection, we explore necessary and sufficient conditions for the resolution to be crepant as well.
+
+\bigbreak
+
+A separate line of questioning asks which rings $R$ of characteristic $p>0$ have noncommutative (crepant) resolutions $\Lambda=\End_{R}M$, whether by $M=\Fe R$ or by any other faithful $R$-module $M$. We are motivated by results in the characteristic $0$ setting, including:
+
+\begin{itemize}
+\item Let $R$ be a normal affine $k$-domain for $k$ an algebraically closed field of characteristic $0$. If $R$ has a noncommutative crepant resolution, then $R$ has rational singularities \cite[Thm.\ ~1.1]{SVdB08}.
+\item Let $(R,\fm,k)$ be a local normal domain of dimension $2$ where $k$ has characteristic $0$. If $R$ has a noncommutative resolution, then $R$ has rational singularities. When additionally $R$ is excellent, henselian, and $k$ is algebraically closed, the converse holds \cite[Cor.\ ~3.3]{DITV15}.
+\item Let $(R,\fm,k)$ be local, reduced, henselian, and dimension $2$. $R$ has a noncommutative resolution if and only if the normalization of $R$ has rational singularities \cite[Thm.\ ~3.5]{DFI15}.
+\end{itemize}
+
+\bigbreak
+
+If $(R,\fm,k)$ has characteristic $p>0$, then one is led naturally through analogy to consider \emph{$F$-rational} singularities, which are defined by requiring $R$ to be Cohen-Macaulay and the top local cohomology $H_{\fm}^{\dim R}(R)$ to have no proper $F$-stable submodules \cite[Thm.\ ~2.6]{Smi97}. 
+
+\bigbreak
+
+\begin{thm}
+Let $R$ be a \todo{some class of ring} of characteristic $p>0$. If $R$ has a noncommutative \todo{crepant?} resolution, then $R$ has $F$-rational singularities.
+\end{thm}
+
+\bigbreak
+
+There are various kinds of $F$-singularities, related among each other in analogous ways to the characteristic $0$ case. In particular, a ring which is $F$-rational is also \emph{$F$-injective}, and if $R$ is in addition Gorenstein, then $R$ is strongly $F$-regular and hence \emph{$F$-split} and \emph{$F$-pure} as well. Thus to progress on the conjecture, proving that the existence of a noncommutative resolution forces $R$ to have any $F$-singularity type is meaningful, via the relationships espoused here.
+
+\bigbreak
+
+We explore positive results in \cref{sec:sings_of_NCR_rings}.
+
+\bigbreak
+
+\subsection{Notation and conventions}\label{subsec:notation}
+
+Throughout, let:
+\begin{itemize}
+\item $p>0$ be a prime integer,
+\item $R$ be a commutative noetherian ring of characteristic $p$,
+\item $\fm$ be the maximal ideal of $R$ whenever $R$ is local,
+\item $k$ be a field, in particular the residue field $R/\fm$ whenever $R$ is local,
+\item $F\colon R\to R$ be the Frobenius $F(r)=r^{p}$,
+\item $M$ be an $R$-module,
+\item $\Lambda=\End_{R}(M)$,
+\item $\omega_{R}$ be a dualizing/canonical module,
+\item \todo{Continue to fill in}
+\end{itemize}
+
+\bigbreak
+
+When $R$ is reduced, $\Fe R\cong\Rpe$, the ring of $p^{e}$th roots of elements of $R$, and the Frobenius $R\hookrightarrow\Fe R$\footnote{$R$ is reduced if and only if $R\to \Fe R$ is injective for some (equivalently for all) $e$.} can be identified with the inclusion $R\subseteq\Rpe$. We will write $\Rpe$ for $\Fe R$ when we are taking $R$ to be reduced. Frequently, $R$ will be reduced, since $F$-split (hence $F$-pure and $F$-injective) rings are reduced \cite[\S2]{MP21}, $F$-rational rings are normal \cite[Prop.\ ~4.4]{MP21}, and $F$-finite strongly $F$-regular rings are normal domains \cite[Lem.\ ~3.2, Cor.\ ~3.8]{MP21}, hence all reduced as well.
+
+\bigbreak
+
+Note that in every theorem statement, we explicitly reiterate the hypotheses needed.
+
+\bigbreak
+
+\subsection{Acknowledgements}
+
+This material is based upon work supported by the National Science Foundation under Grant Number DMS 1916439. Special thanks go to the 2023 American Mathematical Society Mathematics Research Community, in particular E.\ Faber for pointing us in the direction of these questions and the organizers for providing a rich environment to do mathematics. 
+
+\section{\texorpdfstring{$\End_{R}(\Rpe)$}{End\_R(R\^{}(1/p\^{}e))} for strongly \texorpdfstring{$F$}{F}-regular FFRT rings \texorpdfstring{$R$}{R}}\label{sec:sFreg_FFRT}
+
+Throughout, fix the notation of \cref{subsec:notation}. Let $\Lambda=\End_{R}(\Fe R)$. 
+
+\bigbreak
+
+\subsection{NCRs}\label{subsec:sFreg_FFRT_NCR}
+
+Our goal in this subsection is to address \cref{conj:FMS}, which we do in \cref{thm:sFreg_FFRT_implies_gldim_fin}. After a further comment, we see $\Lambda$ is a noncommutative resolution in \cref{cor:sFreg_FFRT_implies_NCR}, and in the following subsection, we explore when $\Lambda$ is furthermore crepant. Our first task is to establish the finite global dimension condition $\gldim(\Lambda)<\infty$.
+
+\bigbreak
+
+\begin{rmk}\label{rmk:calculating_gldim_on_simples}
+Just as in \cite[Prop.\ ~6.3]{FMS19}\footnote{The argument in 6.3 is given in a different specific case but, reiterated here, holds in our setting $\Lambda=\End_{R}(\Fe R)$ too.}, given any arbitrary $M\in\Mod_{R}$, $\Hom_{R}(\Fe R,M)$ is a right $\Lambda$-module via the action $f\cdot\varphi=f\circ\varphi$ for elements $f\in\Hom_{R}(\Fe R,M)$ and $\varphi\in\Lambda$. Thus we have a functor
+\begin{align*}
+\Hom_{R}(\Fe R,\Arg)&\colon\Mod_{R}\to\Mod_{\Lambda}
+\intertext{which restricts to an equivalence}
+\Hom_{R}(\Fe R,\Arg)&\colon\add(\Fe R)\xra{\sim}\proj(\Lambda)
+\end{align*}
+between $\add(\Fe R)$, the subcategory of finite direct sums of summands of $\Fe R$ and $\proj(\Lambda)$, the subcategory of finitely generated projective (right) $\Lambda$-modules, given by the adjunction
+\begin{align*}
+\Arg\otimes_{\Lambda}\Fe R\dashv\Hom_{R}(\Fe R,\Arg).
+\end{align*}
+The equivalence $\add(\Fe R)\simeq\proj(\Lambda)$ gives a functorial bijection between the indecomposable summands of $\Fe R$ and the indecomposable projective $\Lambda$-modules. 
+
+\bigbreak
+
+Therefore, for each indecomposable summand $M_{i}$ of $\Fe R$, the corresponding $\Lambda$-module $P_{i}:=\Hom_{R}(\Fe R,M_{i})$ is an indecomposable projective $\Lambda$-module, and every indecomposable projective $\Lambda$-module is of this form. Each $P_{i}$ has a maximal submodule $N_{i}$, and every simple $\Lambda$-module $S_{i}$ is isomorphic to $P_{i}/N_{i}$.
+
+\bigbreak
+
+This benefits us, as to calculate $\gldim(\Lambda)$, it suffices to calculate $\projdim(S_{i})$ for all simple $\Lambda$-modules, which we will see are a finite list, and then
+\begin{align*}
+\gldim(\Lambda)=\max_{i\in\{1,\ldots,s\}}\left\{\projdim(S_{i})\mid S_{i}\text{ is a simple $\Lambda$-module}\right\}.
+\end{align*}
+In fact, with finitely many $S_{i}$, to show $\gldim(\Lambda)<\infty$ it suffices to show that each $S_{i}$ has \emph{some} finite projective resolution; that is, we need not produce minimal projective resolutions\footnote{Though, note that without minimal projective resolutions, checking if a noncommutative resolution is \emph{crepant} becomes a bigger challenge.}. \todo{Delete the previous sentence if we \emph{can} manage to produce minimal resolutions of $S_{i}$s.}
+\end{rmk}
+
+\bigbreak
+
+Using this remark, we now address \cref{conj:FMS}. Recall that $F$-finite strongly $F$-regular rings are normal domains, hence reduced, so $\Fe R\cong\Rpe$. 
+
+\bigbreak
+
+\begin{thm}\label{thm:sFreg_FFRT_implies_gldim_fin}
+Let $R$ be a noetherian ring of characteristic $p>0$. If $R$ is strongly $F$-regular and has FFRT, then the ring $\Lambda=\End_{R}(\Rpe)$ has finite global dimension for $e\gg0$.
+\end{thm}
+
+\bigbreak
+
+\begin{proof}
+
+Since $R$ is FFRT, we may decompose $\Rpe$ as
+\begin{align*}
+\Rpe\cong\bigoplus_{i=1}^{s}M_{i}^{n(e,i)}
+\end{align*}
+for $n(e,i)\in\NN\cup\{0\}$. By \cref{rmk:calculating_gldim_on_simples}, there are finitely many simple $\Lambda$-modules (in fact, there are $s$ of them), and they are given by the quotient of each $\Hom_{R}(\Rpe,M_{i})$ by its unique maximal submodule.
+
+\bigbreak
+
+We now need to understand $\Hom_{R}(\Rpe,M_{i})$ for each $i$. \todo{Make progress. The toric paper \cite{FMS19} proves this by constructing finite length complexes over $M_{i}$ that, when applying $\Hom_{R}(\mathbb{A},\Arg)$ for their $\mathbb{A}$, produce complexes of projectives, exact except at the end, and whose cokernels are the simples $S_{i}\in\Mod_{\Lambda}$, giving us finite projective resolutions of $S_{i}$. Is this something we can adapt to our setting? Maybe, but seems hard --- the complexes constructed really relied on the toric structure. We'll need to exploit the sFreg structure.}
+\end{proof}
+
+\bigbreak
+
+\begin{rmk}\label{rmk:reduced_implies_faithful}
+Observe that when $R$ is reduced, $\Fe R\cong\Rpe$ is faithful, since the element $1\in R\subseteq\Rpe$ is only annihilated by $0$. From this we immediately deduce the following.
+\end{rmk}
+
+\bigbreak
+
+\begin{cor}\label{cor:sFreg_FFRT_implies_NCR}
+Let $R$ be a noetherian ring of characteristic $p>0$. If $R$ is strongly $F$-regular and FFRT, then the ring $\Lambda=\End_{R}(\Rpe)$ is a noncommutative resolution of $R$.
+\end{cor}
+
+\bigbreak
+
+\begin{proof}
+This follows immediately from \cref{thm:sFreg_FFRT_implies_gldim_fin} (finite global dimension) and \cref{rmk:reduced_implies_faithful} (faithful).
+\end{proof}
+
+\bigbreak
+
+\subsection{NCCRs}\label{subsec:sFreg_FFRT_NCCR}
+
+Next, we want to understand the conditions under which $\Fe R$ is reflexive and $\Lambda=\End_{R}(\Fe R)$ is homologically homogeneous, which is to say $\Lambda$ is a noncommutative \emph{crepant} resolution. First, an easy obstruction.
+
+\bigbreak
+
+\begin{prop}
+Let $(R,\fm,k)$ be a local noetherian valuation ring of characteristic $p>0$. If $\Rpe$ is reflexive, then $R$ is regular. That is, if $R$ is not regular, then $\Lambda=\End_{R}(\Rpe)$ is not a crepant resolution.
+\end{prop}
+
+\bigbreak
+
+\begin{proof}
+Since $\Rpe$ is reflexive, it is torsion free \cite[Tag 0AV0]{SP}. As $R$ is a valuation ring, $\Rpe$ is flat \cite[Tag 0539]{SP}. By Kunz's theorem \cite[Thm.\ 2.1]{Kun69}, $R$ is regular.
+\end{proof}
+
+\bigbreak
+
+\todo{Perhaps the above is \emph{too} quaint. We should do better and then maybe turn it into a remark at best.}
+
+\bigbreak 
+
+\begin{lem}
+Let $(R,\fm,k)$ be a local noetherian reduced Gorenstein ring of characteristic $p>0$. If $\Lambda=\End_{R}(\Rpe)$ is a maximal Cohen-Macaulay $R$-module, then \todo{\ldots}
+\end{lem}
+
+\bigbreak
+
+\begin{proof}
+\todo{\ldots}
+\end{proof}
+
+\bigbreak
+
+\todo{Continue to flesh out this section. Here we want results of the form ``$\End_{R}(\Fe R)$ is crepant (or some subset of the crepant hypotheses) $\Rightarrow$ [blank, perhaps a singularity type]", or ``sFreg, FFRT, and [blank] $\Rightarrow$ $\End_{R}(\Fe R)$ is crepant (or some subset of the crepant hypotheses)."}
+
+\todo{Quick remark: depending on how the proof of the NCR goes, we might have to do a lot of work to conclude the homologically homogeneous condition in a theorem. In the toric paper \cite{FMS19},  the rings $R$ for which $\Lambda$ is homologically homogeneous were easily described by the fact that the complex over $M_{i}$ you built ended up giving a \emph{minimal} projective resolution of $S_{i}$, and they were all the same length if and only if your toric ring had a certain condition (simplicial). Again, we haven't proved the NCR yet, but that's something to think through once we have. The NCR case will be a win if we can just get finite projective resolutions of the $S_{i}$s, so it could be ambitious to produce \emph{minimal} resolutions, and/or characterize the homologically homogeneous condition entirely.}
+
+\section{Singularities of characteristic \texorpdfstring{$p>0$}{p>0} rings with noncommutative resolutions}\label{sec:sings_of_NCR_rings}
+
+Fix the notation of \cref{subsec:notation}. In this section, now suppose that our ring $R$ of positive characteristic has a noncommutative resolution $\Lambda=\End_{R}(M)$. We no longer assume $M$ is $\Fe R$, but instead merely any faithful $R$-module such that $\gldim(\Lambda)<\infty$. Our first result is a characteristic $p>0$ analog of \cite[Cor.\ ~3.3]{DITV15}, which said that for $(R,\fm,k)$ a local normal domain of dimension $2$ and characteristic $0$, if $R$ has a noncommutative resolution, then $R$ has rational singularities.
+
+\bigbreak
+
+\begin{thm}\label{thm:NCR_implies_Frat}
+Let $(R,\fm,k)$ be a local noetherian normal domain of dimension $2$ and characteristic $p>0$. If $R$ has a noncommutative \todo{crepant?} resolution of singularities $\Lambda=\End_{R}(M)$, then $R$ has $F$-rational singularities.
+\end{thm}
+
+\bigbreak
+
+\begin{proof}
+\todo{Hypotheses:}
+\begin{itemize}
+\item $M$ is faithful, i.e. $\Ann_{R}(M)=0$,
+\item $\gldim\Lambda<\infty$,
+\item \todo{OPTIONAL:} $M$ is reflexive, i.e. the natural map
+\begin{align*}
+M\to M^{**}:=\Hom_{R}(\Hom_{R}(M,R),R)
+\end{align*}
+is an isomorphism,
+\begin{itemize}
+\item Equivalently, $\Ext_{R}^{n}(\Tr(M),R)=0$ for $1\leq n\leq2$, where $\Tr(M)$ is the Auslander-Bridger transpose. Let $R$ be semiperfect (e.g., local suffices). Given a minimal projective presentation of $M$
+\begin{align*}
+P_{1}\xra{p_{1}}P_{0}\to M\to0,
+\end{align*}
+apply the dualizing functor $(\Arg)^{*}$ to obtain a minimal projective presentation
+\begin{align*}
+P_{0}^{*}\xra{p_{1}^{*}}P_{1}^{*}\to\coker p_{1}^{*}\to0;
+\end{align*}
+define $\Tr(M):=\coker p_{1}^{*}$. \todo{This is messy but a lot of the other hypotheses deal with $\Ext$s, local cohomologies, etc, so maybe expressing it in this way gives us some interplay.}
+\end{itemize}
+\item \todo{OPTIONAL:} $\Lambda$ is homologically homogeneous,
+\item $\dim R=2$,
+\item $R$ is normal; equivalently, $R$ satisfies the following two Serre conditions: 
+\begin{itemize}
+\item $R$ is $(R_{1})$ (regular in codimension $1$), i.e., $R_{\fp}$ is regular for all primes $\fp$ with height $\h\fp\leq1$, and 
+\item $R$ is $(S_{2})$, i.e., $\depth_{\fp}R_{\fp}\geq\inf\{2,\h\fp\}$ for all primes $\fp$. (Equivalently, if $\h\fp\geq2$ and thus $\h\fp=2$, then $\depth_{\fp}R_{\fp}\geq2$. Since $R$ is local, only $\fp=\fm$ has height $\h\fm=2$, and therefore $(S_{2})$ is the Cohen-Macaulay condition $\depth_{\fm}R=2=\dim R$.)
+\end{itemize}
+\item $R$ is a domain. This implies $R^{\circ}=R\setminus\{0\}$.
+\end{itemize}
+
+\bigbreak\hrule\bigbreak
+
+\todo{Conclusions:} $R$ is Cohen-Macaulay and \todo{(any would be enough to conclude $F$-rationality)}:
+\begin{itemize}
+\item (If $R$ has a dualizing module $\omega_{R}$, for instance if $R$ is complete local Cohen-Macaulay or if $R$ is $F$-finite \cite[Thm.\ ~1.6]{MP21})
+\begin{align*}
+s_{\dual}(R)&=\limsup_{e\to\infty}\frac{\max_{N}\{\text{there is a surjection }\Fe\omega_{R}\onto\omega_{R}^{N}\}}{\rank\Fe\omega_{R}}\\
+&=\inf_{\langle\ux\rangle\subsetneq I}\left\{\frac{e_{HK}(\langle\ux\rangle)-e_{HK}(I)}{\ell(R/\langle\ux\rangle)-\ell(R/I)}\right\}\\
+&>0,
+\end{align*}
+where $\ux$ are systems of parameters properly contained in ideals $I$, $\ell(\Arg)$ is the length, and $e_{HK}(\Arg)$ is the Hilbert-Kunz multiplicity, defining the dual $F$-signature $s_{\dual}$ \cite[\S1]{ST19}. 
+
+(A dualizing module $\omega_{R}$ of a local ring $(R,\fm,k)$ satisfies
+\begin{enumerate}
+\item $\depth_{\fm}\omega_{R}:=\min_{n}\{\Ext_{R}^{n}(k,\omega_{R})\neq0\}=\dim R$, and
+\item $\dim_{k}\Ext_{R}^{d}(k,\omega_{R})=1$.)
+\end{enumerate}
+
+If you don't want to take $F$-finite, we could try to reduce without loss of generality to the case $R$ is complete, since ``$R^{\wedge}$ is $F$-rational $\Rightarrow$ $R$ is $F$-rational," and the converse holds for excellent rings \cite[Thm.\ ~6.16]{MP21}. But $F$-finite is often fine to take (and remember $F$-finite implies excellent \cite[Thm.\ ~1.7]{MP21}).
+
+When $R$ is Gorenstein, $\omega_{R}\cong R$.
+
+\item $0_{H_{\fm}^{\dim R}(R)}^{*}=0$ where for
+\begin{align*}
+\gamma_{e}\colon H_{\fm}^{\dim R}(R)\cong H_{\fm}^{\dim R}(R)\otimes_{R}R\xra{\id\otimes F^{e}}H_{\fm}^{\dim R}(R)\otimes_{R}\Fe R,
+\end{align*}
+one has
+\begin{align*}
+0_{H_{\fm}^{\dim R}(R)}^{*}:=\left\{\eta\in H_{\fm}^{\dim R}(R)\mid\text{there exists }c\in R^{\circ}\text{ such that }c\cdot\gamma_{e}(\eta)=0\text{ for }e\gg0\right\}.
+\end{align*}
+So in other words, if there exist $c$, $e$ such that $c\cdot\gamma_{e}(\eta)=0$, then $\eta=0$.
+
+Note that we can simplify some: an element $\eta\in H_{\fm}^{2}(R)$ looks like the class $\eta=[r/{x_{1}}^{a}{x_{2}}^{a}]$ for $\fm=\sqrt{(x_{1},x_{2})}$ and the Frobenius action $\gamma_{e}$ takes $\eta$ to $[r^{p^{e}}/{x_{1}}^{ap^{e}}{x_{2}}^{ap^{e}}]$. And (in the excellent Cohen-Macaulay local case) it's equivalent to show that for one $c\in R^{\circ}$ such that $R_{c}$ is regular (if such a $c$ exists), there exists $e\gg0$ such that $c\cdot\gamma_{e}(\Arg)$ is injective \cite[Thm.\ ~7.9]{MP21}.
+\item Every parameter ideal $\fq=(\ux)=(x_{1},\ldots,x_{d})$ is tightly closed; $\fq=\fq^{*}$. Recall 
+\begin{align*}
+\fq^{*}:=\left\{r\in R\mid\text{there exists }c\in R^{\circ}\text{ such that }cz^{p^{e}}\in\fq^{[p^{e}]}\text{ for all }e\gg0\right\},
+\end{align*}
+where
+\begin{align*}
+\fq^{[p^{e}]}=(x_{1},\ldots,x_{d})^{[p^{e}]}:=({x_{1}}^{p^{e}},\ldots,{x_{d}}^{p^{e}}).
+\end{align*} 
+(Remember the shortest length system of parameters is always $\dim R$, but $\fm$ itself is a parameter ideal if and only if $R$ is regular; in general you only get $\fm=\sqrt{\fq}$. Fortunately this doesn't matter for local cohomology calculations though, since $H_{I}^{i}(\Arg)\cong H_{J}^{i}(\Arg)$ when $\sqrt{I}\cong\sqrt{J}$.)
+
+When $(R,\fm,k)$ is excellent and equidimensional, it is enough to show that some ideal generated by a full system of parameters is tightly closed \cite[(6.27) Prop.]{HH94}.
+\end{itemize}
+
+\bigbreak\hrule\bigbreak
+
+Since $R$ is $2$-dimensional and normal, $R$ is Cohen-Macaulay. \checkmark
+
+\bigbreak\hrule\bigbreak
+
+\todo{Now let's start attempting to show any of the conclusions giving $F$-rationality. Different thoughts separated by \texttt{\symbol{`\\}hrule}s:}
+
+Suppose there exists an element $c\in R^{\circ}=R\setminus\{0\}$ such that $R_{c}$ is regular. Let $\eta\in H_{\fm}^{2}(R)$ be the class $[r/{x_{1}}^{a}{x_{2}}^{a}]$. We want to show that $c\cdot\gamma_{e}(\eta)=0$ implies $\eta=0$, which occurs if and only if there exists $k\in\ZZ_{\geq0}$ such that $r(x_{1}x_{2})^{k}\in({x_{1}}^{a+k},{x_{2}}^{a+k})$. 
+
+We have
+\begin{align*}
+0=c\cdot\gamma_{e}(\eta)=c\cdot\gamma_{e}\left(\left[\frac{r}{{x_{1}}^{a}{x_{2}}^{a}}\right]\right)=c\cdot\left[\frac{r^{p^{e}}}{{x_{1}}^{ap^{e}}{x_{2}}^{ap^{e}}}\right]=\left[\frac{cr^{p^{e}}}{{x_{1}}^{ap^{e}}{x_{2}}^{ap^{e}}}\right],
+\end{align*}
+\todo{moving the $c$ in is okay?} which occurs if and only if there exists $k\in\ZZ_{\geq0}$ such that $cr^{p^{e}}({x_{1}}^{ap^{e}}{x_{2}}^{ap^{e}})^{k}\in({x_{1}}^{ap^{e}+k},x_{2}^{ap^{e}+k})$. \todo{Now somehow use the NC(C)R hypotheses to turn this into the needed claim for $\eta$ to be $0$.}
+
+\bigbreak\hrule\bigbreak
+
+Let $\fq=(x_{1},x_{2})$ be a parameter ideal. We need to show
+\begin{align*}
+\fq=\fq^{*}:=\left\{r\in R\mid\text{there exists }c\in R^{\circ}\text{ such that }cz^{p^{e}}\in\fq^{[p^{e}]}\text{ for all }e\gg0\right\}.
+\end{align*}
+
+\bigbreak\hrule\bigbreak
+
+Since $M$ is faithful, $\Ann_{R}(M)=0$ and therefore
+\begin{align*}
+\dim_{R}(M):=\dim(R/\Ann_{R}(M))=\dim R=2.
+\end{align*}
+A system of parameters of $M$ is a sequence $y_{1},y_{2}\in R$ such that the images of $y_{1}$ and $y_{2}$ form a system of parameters in $R/\Ann_{R}(M)\cong R$. So systems of parameters on $R$ and on faithful $M$ are the same. \todo{Worry: the proof can't \emph{only} use the hypothesis that $M$ is faithful, since $R$ is always a faithful $R$-module. So any proofs of the form ``a class of ring $R$ with a faithful module $\Rightarrow$ $R$ is $F$-rational," without any other NC(C)R hypotheses used, are dumb proofs and wouldn't be saying anything about NC(C)Rs. The same is true for reflexivity --- $R$ is always a reflexive $R$-module --- so crepant or not, we need to understand how $\Lambda$ plays ball here.}
+
+\bigbreak\hrule\bigbreak
+
+Since $\gldim(\Lambda)=n<\infty$, given any $\Lambda$-module $N$, $\projdim(N)\leq n$. Recall from \cref{rmk:calculating_gldim_on_simples} that the finitely generated projective $\Lambda$-modules are equivalent to finite direct sums of summands of $M$ where $\Lambda=\End_{R}(M)$. 
+
+\bigbreak\hrule\bigbreak
+
+By \cite[Cor.\ ~2.1]{DITV15}, if $R$ is a semilocal normal domain with a noncommutative resolution, then the divisor class group $\Cl(R)$ is a finitely generated abelian group. \todo{Does this influence what $F$-singularties $R$ can have? In the characteristic $0$ setting, \cite[Cor.\ ~3.3]{DITV15} uses this very fact to show $R$ is rational, so there may be some hope to use this to somehow deduce $F$-rational. This approach is probably our best hope, because it's a statement about $R$ directly. Contrast that to a proof solely using the NC(C)R properties, which would probably have to navigate the endomorphism ring $\Lambda$ back into terms of $R$ to eventually conclude what singularities $R$ has, which seems harder.}
+
+When $R$ is normal and Cohen-Macaulay, $\omega_{R}$ is a rank one reflexive module and hence is in bijection with an element in $\Cl(R)$ \cite[(14.10)]{Hoc11}. 
+\end{proof}
+
+\bigbreak
+
+\todo{For more results, we could mirror the other cited characteristic $0$ results from the introduction. We could also just start taking interesting hypotheses plus NC(C)Rs and see if we can deduce whatever $F$-singularity types we can.}
+
+\begin{thebibliography}{99}
+
+\bibitem[AL02]{AL02} I.\ M.\ Aberbach, G.\ J.\ Leuschke, \emph{The F-signature and strong F-regularity}, Math Res. Lett., 10.1 (2003): 51--56.
+
+\bibitem[DFI15]{DFI15} H.\ Dao, E.\ Faber, C.\ Ingalls, \emph{Noncommutative (crepant) desingularizations and the global spectrum of commutative rings}, Algebras and Representation Theory 18.3 (2015): 633--664.
+
+\bibitem[DITV15]{DITV15} H.\ Dao, O.\ Iyama, R.\ Takahashi, C.\ Vial, \emph{Non-commutative resolutions and Grothendieck groups}, Journal of Noncommutative Geometry 9.1 (2015): 21--34.
+
+\bibitem[FMS19]{FMS19} E.\ Faber, G.\ Muller, K.\ E.\ Smith, \emph{Non-commutative resolutions of toric varieties}, Advances in Mathematics 351 (2019): 236--274.
+
+\bibitem[HH94]{HH94} M.\ Hochster, C.\ Huneke, \emph{F-regularity, test elements, and smooth base change}, Transactions of the American Mathematical Society (1994): 1--62.
+
+\bibitem[Hoc11]{Hoc11} M.\ Hochster, \emph{Local cohomology}, Unpublished notes available online at \mbox{\url{https://dept.math.lsa.umich.edu/~hochster/615W11/loc.pdf}} (2011).
+
+\bibitem[Kun69]{Kun69} E.\ Kunz, \emph{Characterizations of regular local rings of characteristic p}, American Journal of Mathematics 91.3 (1969): 772--784.
+
+\bibitem[Leu12]{Leu12} G.\ J.\ Leuschke, \emph{Non-commutative crepant resolutions: scenes from categorical geometry}, Progress in commutative algebra 1 (2012): 293--361.
+
+\bibitem[MP21]{MP21} L.\ Ma, T.\ Polstra, \emph{F-singularities: a commutative algebra approach}, Preprint available online at \mbox{\url{https://www.math.purdue.edu/\~ma326/F-singularitiesBook.pdf}} (2021).
+
+\bibitem[Rei83]{Rei83} M.\ Reid, \emph{Minimal models of canonical 3-folds}, Adv. Stud. Pure Math 1 (1983): 131--180.
+
+\bibitem[Shi11]{Shi11} T.\ Shibuta, \emph{One-dimensional rings of finite F-representation type}, Journal of Algebra 332.1 (2011): 434--441.
+
+\bibitem[Smi97]{Smi97} K.\ E.\ Smith, \emph{F-rational rings have rational singularities,} American Journal of Mathematics 119.1 (1997): 159--180.
+
+\bibitem[ST19]{ST19} I.\ Smirnov, K.\ Tucker, \emph{The theory of F-rational signature}, arXiv preprint arXiv:1911.02642 (2019).
+
+\bibitem[SVdB97]{SVdB97} K.\ E.\ Smith, M.\ Van den Bergh, \emph{Simplicity of rings of differential operators in prime characteristic}, Proceedings of the London Mathematical Society 75.1 (1997): 32--62.
+
+\bibitem[SP]{SP} The Stacks Project Authors, {\em Stacks Project}, Available online at \mbox{\url{https://stacks.math.columbia.edu}} (2023).
+
+\bibitem[SVdB08]{SVdB08} J.\ T.\ Stafford, M.\ Van den Bergh, \emph{Noncommutative resolutions and rational singularities}, Michigan Mathematical Journal 57 (2008): 659--674.
+
+\bibitem[Wei94]{Wei94} C.\ A.\ Weibel, \emph{An introduction to homological algebra}, Cambridge Studies in Advanced Math., 38, Cambridge Univ. Press, 1994.
+
+\end{thebibliography}
+
+\end{document}
